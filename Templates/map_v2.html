@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    {{ header|safe }}
+{% endblock %}
+
+{% block content %}
+<h1>La mia mappa</h1>
+<div style="height:100vh; width: 100vw;">
+    {{ body_html|safe }}
+</div>
+{% endblock %}
+{% block script %}
+    {{ script|safe }}
+{% endblock %}
