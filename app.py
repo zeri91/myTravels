@@ -125,22 +125,6 @@ def map():
     context = {'header': header, 'body_html': body_html, 'script': script}
     return render_template('map_v2.html', **context)
 
-@app.route("/components")
-def components():
-    """Extract map components and put those on a page."""
-    m = folium.Map(
-        width=800,
-        height=600,
-    )
-
-    m.get_root().render()
-    header = m.get_root().header.render()
-    body_html = m.get_root().html.render()
-    script = m.get_root().script.render()
-
-    context = {'header': header, 'body_html': body_html, 'script': script}
-    return render_template('map_v2.html', **context)
-
 @app.route("/login")
 def login():
     # Find out what URL to hit for Google login
@@ -227,9 +211,6 @@ def logout():
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
-
-#if __name__ == "__main__":
-#    app.run(ssl_context="adhoc")
 
 if __name__ == '__main__':
     app.run(debug=True, ssl_context="adhoc")
