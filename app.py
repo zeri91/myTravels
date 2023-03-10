@@ -64,14 +64,18 @@ def load_user(user_id):
 #with app.app_context():
 #    db.create_all()
 
-@app.route('/')
-def index():
+# context passato a tutte le route
+@app.context_processor
+def usr_context():
     # using Flask-Login library, we can easily check if a user is logged in
     if current_user.is_authenticated:
-        context = {'msg': current_user.name}
+        return {'usr_status': current_user.name, 'pagina':'profile'}
     else:
-        context = {'msg': 'click here to login'}
-    return render_template('index.html', **context)
+        return {'usr_status': 'click here to login', 'pagina':'login'}
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 # Definizione della rotta per la pagina di registrazione
 @app.route('/registrazione', methods=['GET', 'POST'])
