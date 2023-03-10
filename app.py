@@ -95,12 +95,15 @@ def registrazione():
 
 @app.route('/map')
 def map(): 
-    airports = pd.read_csv("./data/airports.csv")
+    airports = pd.read_csv("./data/airports-v2.csv").to_dict('records')
     eco_footprints = pd.read_csv("./data/footprint.csv")
     max_eco_footprint = eco_footprints["Ecological footprint"].max()
     political_countries = ("./static/admin_0_countries.geojson")
 
-    m = folium.Map(location=(30, 10), zoom_start=3, tiles="cartodb positron", width='80%', height='80%')
+    m = folium.Map(
+        location=(30, 10), zoom_start=3, tiles="cartodb positron", 
+        width='80%', height='80%',
+        )
 
     # folium.GeoJson(political_countries).add_to(m)
 
@@ -118,7 +121,33 @@ def map():
         name="Countries by ecological footprint per capita",
     ).add_to(m)
 
-    folium.LayerControl().add_to(m)
+    # Creare un FeatureGroup per contenere tutti i marker
+    marker_airports = folium.FeatureGroup(name='airports', show=False)
+    marker_monuments = folium.FeatureGroup(name='monuments', show=True)
+    
+    # Aggiungere i markers al FeatureGroup
+    for a in airports:
+        nome = a['name']
+        lat = a['latitude_deg']
+        lon = a['longitude_deg']
+        #marker = folium.Marker(location=[lat, lon], tooltip=nome, icon=folium.Icon(color='blue', icon='plane'))
+        #marker.add_to(m)
+        folium.Marker(location=[lat, lon], tooltip=nome, icon=folium.Icon(color='blue', icon='plane')).add_to(marker_airports)
+    
+    # Aggiungere il FeatureGroup alla mappa
+    marker_airports.add_to(m)
+    
+    # aggiungi il layer con qualche monumento di test 
+    folium.Marker(location=[38.897, -77.036], tooltip="white house", icon=folium.features.CustomIcon('./static/images/icons/white-house-c.png', icon_size=(30,30))).add_to(marker_monuments)
+    folium.Marker(location=[41.890, 12.492], tooltip="colosseum", icon=folium.features.CustomIcon('./static/images/icons/colosseum-c.png', icon_size=(30,30))).add_to(marker_monuments)
+    folium.Marker(location=[48.852, 2.350], tooltip="notre dame", icon=folium.features.CustomIcon('./static/images/icons/notre-dame-c.png', icon_size=(30,30))).add_to(marker_monuments)
+    folium.Marker(location=[27.173, 78.042], tooltip="taj mahal", icon=folium.features.CustomIcon('./static/images/icons/taj-mahal.png', icon_size=(30, 30))).add_to(marker_monuments)
+    folium.Marker(location=[43.7230159, 10.3966321974895], tooltip="leaning tower", icon=folium.features.CustomIcon('./static/images/icons/leaning-tower-c.png', icon_size=(30, 30))).add_to(marker_monuments)
+
+    marker_monuments.add_to(m)
+
+    # Add layer control to the map
+    folium.LayerControl(position='topright').add_to(m)
 
     # Extract map components and put those on a page
     m.get_root().render()
@@ -212,6 +241,7 @@ def callback():
 def logout():
     logout_user()
     return redirect(url_for("index"))
+
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
