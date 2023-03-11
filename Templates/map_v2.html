@@ -5,11 +5,26 @@
 {% endblock %}
 
 {% block content %}
-<h1>La mia mappa</h1>
-<div style="height:100vh; width: 100vw;">
-    {{ body_html|safe }}
-</div>
+  <!-- Barra di ricerca e pulsanti -->
+  <div class="search-bar">
+    <span>Your map</span>
+    <form method="POST" class="form-inline mt-3">
+      <input class="form-control mr-2" type="search" placeholder="Cerca localitá" id="address" name="address">
+      <button class="btn btn-outline-success" type="submit">Cerca</button>
+      <button class="btn btn-outline-primary ms-2" type="button">Pulsante 1</button>
+      <button class="btn btn-outline-secondary ms-2" type="button">Pulsante 2</button>
+    </form>
+  </div>
+  {% if error_message %}
+    <div class="alert alert-danger mt-3" role="alert">
+      {{ error_message }}
+    </div>
+  {% endif %}
+  <div class="map-container">
+      {{ body_html|safe }}
+  </div>
 {% endblock %}
+
 {% block script %}
     {{ script|safe }}
 {% endblock %}

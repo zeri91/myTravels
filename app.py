@@ -17,6 +17,7 @@ import requests
 from flask_sqlalchemy import SQLAlchemy
 from models import User, db
 import folium
+from folium import plugins
 from folium.plugins import MarkerCluster
 import pandas as pd
 
@@ -30,6 +31,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 )
+POSITIONSTACK_KEY = os.environ.get("POSITIONSTACK_KEY")
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
@@ -93,7 +95,7 @@ def registrazione():
         return "Registrazione effettuata con successo!"
     return render_template('registrazione.html')
 
-@app.route('/map')
+@app.route('/map', methods=['GET', 'POST'])
 def map(): 
     airports = pd.read_csv("./data/airports-v2.csv").to_dict('records')
     eco_footprints = pd.read_csv("./data/footprint.csv")
@@ -104,6 +106,18 @@ def map():
         location=(30, 10), zoom_start=3, tiles="cartodb positron", 
         width='80%', height='80%',
         )
+
+    # prende le ricerche degli utenti e richiama l'API per trovare le coordinate 
+    # del luogo richiesto e impostare un marker
+    if request.method == 'POST':
+        address = request.form['address']
+        api_key = POSITIONSTACK_KEY
+        lat, lon = get_lat_long(address, api_key)
+        if lat and lon:
+            folium.Marker(location=[lat, lon], popup=address).add_to(m)
+            #return m._repr_html_()
+        else:
+            return "Indirizzo non valido"
 
     # folium.GeoJson(political_countries).add_to(m)
 
@@ -145,6 +159,14 @@ def map():
     folium.Marker(location=[43.7230159, 10.3966321974895], tooltip="leaning tower", icon=folium.features.CustomIcon('./static/images/icons/leaning-tower-c.png', icon_size=(30, 30))).add_to(marker_monuments)
 
     marker_monuments.add_to(m)
+    
+   # search = plugins.Search(layer=marker_monuments,
+   #                      geom_type='Point',
+   #                      position='topright',
+   #                      placeholder='Cerca...',
+   #                      collapsed=False,
+   #                      )
+   # search.add_to(m)
 
     # Add layer control to the map
     folium.LayerControl(position='topright').add_to(m)
@@ -245,6 +267,21 @@ def logout():
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
+
+def get_lat_long(address, api_key):
+    url = 'http://api.positionstack.com/v1/forward'
+    params = {
+        'access_key': api_key,
+        'query': address,
+        'limit': 1
+    }
+    response = requests.get(url, params=params).json()
+    if response['data']:
+        lat = response['data'][0]['latitude']
+        lon = response['data'][0]['longitude']
+        return lat, lon
+    else:
+        return None
 
 if __name__ == '__main__':
     app.run(debug=True, ssl_context="adhoc")

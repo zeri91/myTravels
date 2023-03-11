@@ -1,0 +1,43 @@
+.map-container {
+    width: calc(100% - 20px);
+    margin: 10px;
+    height:100vh; 
+    /*width: 100vw;*/
+  }
+
+.search-bar {
+    background-color: #4282CA;
+    padding: 5px;
+    margin: 10px;
+  }
+  
+  .search-bar form {
+    display: inline-block;
+    justify-content: left;
+  }
+  
+  .search-bar input[type="text"] {
+    border: none;
+    padding: 5px;
+    width: 80%;
+  }
+  
+  .search-bar button[type="submit"] {
+    border: 1px solid white;
+    color: white;
+    cursor: pointer;
+  }
+
+  .search-bar button {
+    border: 1px solid white;
+    color: white;
+  }
+
+  .search-bar span {
+    display: inline-block;
+    margin: 5px;
+    font-weight: bold;
+    font-size: medium;
+    color: white;
+    
+  }
