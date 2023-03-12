@@ -4,7 +4,7 @@ import os
 import sqlite3
 
 # Third-party libraries
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_login import (
     LoginManager,
     current_user,
@@ -15,13 +15,13 @@ from flask_login import (
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 from flask_sqlalchemy import SQLAlchemy
-from models import User, db
+# from models import User, db // vecchio file models.py
 import folium
 from folium import plugins
 from folium.plugins import MarkerCluster
 import pandas as pd
 
-# Internal imports
+# Internal imports (aggiunti per il google login)
 from db import init_db_command
 from user import User
 
@@ -47,7 +47,7 @@ login_manager.init_app(app)
 def unauthorized():
     return "You must be logged in to access this content.", 403
 
-# Naive database setup
+# Naive database setup (google login)
 try:
     init_db_command()
 except sqlite3.OperationalError:
@@ -86,13 +86,7 @@ def registrazione():
         # Ottenere i dati dal form di registrazione
         username = request.form['username']
         password = request.form['password']
-
-        # Creare un nuovo utente e aggiungerlo al database
-        nuovo_utente = User(username=username, password=password)
-        db.session.add(nuovo_utente)
-        db.session.commit()
-
-        return "Registrazione effettuata con successo!"
+        
     return render_template('registrazione.html')
 
 @app.route('/map', methods=['GET', 'POST'])
@@ -117,7 +111,7 @@ def map():
             folium.Marker(location=[lat, lon], popup=address).add_to(m)
             #return m._repr_html_()
         else:
-            return "Indirizzo non valido"
+            flash('Location not valid', 'error')
 
     # folium.GeoJson(political_countries).add_to(m)
 
@@ -281,7 +275,7 @@ def get_lat_long(address, api_key):
         lon = response['data'][0]['longitude']
         return lat, lon
     else:
-        return None
+        return (None, None)
 
 if __name__ == '__main__':
     app.run(debug=True, ssl_context="adhoc")

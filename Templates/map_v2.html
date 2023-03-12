@@ -9,7 +9,7 @@
   <div class="search-bar">
     <span>Your map</span>
     <form method="POST" class="form-inline mt-3">
-      <input class="form-control mr-2" type="search" placeholder="Cerca localitá" id="address" name="address">
+      <input class="form-control mr-2" type="search" placeholder="Cerca localitá" id="address" name="address", value="{{ request.form['address'] }}">
       <button class="btn btn-outline-success" type="submit">Cerca</button>
       <button class="btn btn-outline-primary ms-2" type="button">Pulsante 1</button>
       <button class="btn btn-outline-secondary ms-2" type="button">Pulsante 2</button>

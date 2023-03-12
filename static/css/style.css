@@ -38,6 +38,12 @@
     margin: 5px;
     font-weight: bold;
     font-size: medium;
-    color: white;
-    
+    color: white; 
   }
+
+  .alert-msg {
+    padding: 20px;
+    margin: 5px;
+    color: #970020;
+    background-color: #ffd5de;
+}

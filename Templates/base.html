@@ -51,9 +51,12 @@
         </div>
       </nav>
 
-    <div class="container">
-        {% block content %}
-        {% endblock %}
+    <div>
+      {% for message in get_flashed_messages(with_categories=false) %}
+            <div class="alert-msg">{{ message }}</div>
+      {% endfor %}
+      {% block content %}
+      {% endblock %}
     </div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
