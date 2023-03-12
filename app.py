@@ -15,13 +15,12 @@ from flask_login import (
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 from flask_sqlalchemy import SQLAlchemy
-# from models import User, db // vecchio file models.py
 import folium
 from folium import plugins
 from folium.plugins import MarkerCluster
 import pandas as pd
 
-# Internal imports (aggiunti per il google login)
+# Internal imports for the DB
 from db import init_db_command
 from user import User
 
@@ -47,14 +46,15 @@ login_manager.init_app(app)
 def unauthorized():
     return "You must be logged in to access this content.", 403
 
-# Naive database setup (google login)
+################### 
+# DB setup, si puó togliere una volta che il db é creato 
 try:
     init_db_command()
 except sqlite3.OperationalError:
     # Assume it's already been created
     pass
 
-# OAuth 2 client setup
+# OAuth2 client setup to communicate with Google server
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 # Flask-Login helper to retrieve a user from our db
@@ -62,11 +62,7 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 def load_user(user_id):
     return User.get(user_id)
 
-# Creazione del database
-#with app.app_context():
-#    db.create_all()
-
-# context passato a tutte le route
+# context passato a tutte le route con lo stato dell'utente
 @app.context_processor
 def usr_context():
     # using Flask-Login library, we can easily check if a user is logged in
@@ -86,7 +82,7 @@ def registrazione():
         # Ottenere i dati dal form di registrazione
         username = request.form['username']
         password = request.form['password']
-        
+
     return render_template('registrazione.html')
 
 @app.route('/map', methods=['GET', 'POST'])
