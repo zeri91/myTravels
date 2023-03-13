@@ -36,3 +36,14 @@ class User(UserMixin):
             (id_, name, email, profile_pic),
         )
         db.commit()
+
+    @staticmethod
+    def get_user_locations(user_id):
+        db = get_db()
+        locations = db.execute(
+            "SELECT * FROM locations WHERE user_id=?", (user_id,)
+        ).fetchall()
+        
+        if len(locations) == 0:
+            return []
+        return locations     

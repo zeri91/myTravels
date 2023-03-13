@@ -4,7 +4,7 @@ import os
 import sqlite3
 
 # Third-party libraries
-from flask import Flask, render_template, redirect, request, url_for, flash
+from flask import Flask, render_template, redirect, request, url_for, flash, g
 from flask_login import (
     LoginManager,
     current_user,
@@ -62,6 +62,15 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 def load_user(user_id):
     return User.get(user_id)
 
+# Executed before every request
+@app.before_request
+def load_locations():
+    if current_user.is_authenticated:
+        if not hasattr(g, 'locations') or not g.locations:
+            g.locations = User.get_user_locations(current_user.id)
+    else:
+        g.locations = []
+
 # context passato a tutte le route con lo stato dell'utente
 @app.context_processor
 def usr_context():
@@ -96,6 +105,12 @@ def map():
         location=(30, 10), zoom_start=3, tiles="cartodb positron", 
         width='80%', height='80%',
         )
+    
+    # load the favourit locations of the user
+    marker_favourits = folium.FeatureGroup(name='favourits', show=True)
+    for l in g.locations:
+        folium.Marker(location=[l['lat'], l['long']], icon=folium.Icon(color='yellow', icon='star')).add_to(marker_favourits)
+    marker_favourits.add_to(m)   
 
     # prende le ricerche degli utenti e richiama l'API per trovare le coordinate 
     # del luogo richiesto e impostare un marker

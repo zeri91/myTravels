@@ -11,8 +11,10 @@ CREATE TABLE user (
 CREATE TABLE locations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT NOT NULL, 
+  name TEXT NOT NULL,
   lat FLOAT NOT NULL,
   long FLOAT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('favourites', 'visited', 'wishlist')),
   timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user (id)
 )
