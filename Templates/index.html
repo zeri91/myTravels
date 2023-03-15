@@ -2,33 +2,36 @@
 {% block title %} MyTravels {% endblock %} 
 {% block link %}{{ msg }}{% endblock %}   
     
-  <body>
     
-    {% block content %}
-        <!-- Header -->
-        <header class="bg-primary text-white py-5">
-        <div class="container">
-            <h1>Welcome to MyTravels</h1>
-            <p class="lead">Your one-stop shop for all your travel needs</p>
-        </div>
-        </header>
+{% block content %}
+<div id="home">
+    <!-- Header -->
+    <header class="bg-primary text-white py-5">
+    <div class="container">
+        <h1>Welcome to MyTravels</h1>
+        <p class="lead">Your one-stop shop for all your travel needs</p>
+    </div>
+    </header>
 
-        <!-- Main Content -->
-        <main class="container my-5">
-        <div class="row">
-            <div class="col-md-8">
-            <h2 class="mb-4">Discover new places to explore</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus pretium, eros nec blandit pretium, arcu nisl
-                feugiat dolor, vel mollis magna mi sit amet ex. Nunc id augue et lacus rutrum auctor vel at erat. Curabitur
-                tristique, ante a ullamcorper tincidunt, purus nisl aliquam lacus, at varius libero mi id nunc.</p>
-            <p>Curabitur eget arcu vitae tellus posuere efficitur. Donec vel velit ac ex hendrerit facilisis non non ante.
-                Donec blandit, dolor vel suscipit posuere, quam ipsum finibus augue, eget sagittis dolor enim non odio.
-                Vestibulum lobortis erat sed aliquam laoreet. Duis iaculis augue sit amet arcu tempor, eget auctor elit
-                egestas.</p>
-            <a href="#" class="btn btn-primary mt-4">Learn More</a>
-            </div>
-            <div class="col-md-4">
-            <h2 class="mb-4">Why MyTravels?</h2>
-            <ul class="list-group">
-                <li class="list-group-item">Convenient one-stop shop
-    {% endblock %}
+    <!-- Main Content -->
+    <main class="container my-5">
+    <div class="row">
+        <div class="col-md-8">
+        <h2 class="mb-4">Discover new places to explore</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus pretium, eros nec blandit pretium, arcu nisl
+            feugiat dolor, vel mollis magna mi sit amet ex. Nunc id augue et lacus rutrum auctor vel at erat. Curabitur
+            tristique, ante a ullamcorper tincidunt, purus nisl aliquam lacus, at varius libero mi id nunc.</p>
+        <p>Curabitur eget arcu vitae tellus posuere efficitur. Donec vel velit ac ex hendrerit facilisis non non ante.
+            Donec blandit, dolor vel suscipit posuere, quam ipsum finibus augue, eget sagittis dolor enim non odio.
+            Vestibulum lobortis erat sed aliquam laoreet. Duis iaculis augue sit amet arcu tempor, eget auctor elit
+            egestas.</p>
+        <a href="#" class="btn btn-primary mt-4">Learn More</a>
+        </div>
+        <div class="col-md-4">
+        <h2 class="mb-4">Why MyTravels?</h2>
+        <ul class="list-group">
+            <li class="list-group-item">Convenient one-stop shop</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

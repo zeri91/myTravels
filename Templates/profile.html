@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2>Welcome back {{ name }}</h2>
+  <p>Go to your <a href="{{ url_for('travels_list') }}"> travel list</a></p>
+</div>
+{% endblock %}

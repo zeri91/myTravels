@@ -1,3 +1,23 @@
+html, body {
+  height: 100%;
+}
+
+.main-content {
+  height: 100%;
+}
+/*
+#home {
+  background-image: url('/static/images/main-bg.jpg');
+  background-size: cover;
+}
+
+#travelslist {
+  background-image: url('/static/images/map.jpg');
+  background-size: cover;
+  height: 100hv;
+}
+*/
+
 .map-container {
     width: calc(100% - 20px);
     margin: 10px;
@@ -47,3 +67,10 @@
     color: #970020;
     background-color: #ffd5de;
 }
+
+.travel {
+  padding: 10px;
+  margin: 5px;
+  background-color: #f3f3f3
+}
+

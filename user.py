@@ -47,3 +47,14 @@ class User(UserMixin):
         if len(locations) == 0:
             return []
         return locations     
+    
+    def get_user_trips(user_id):
+        db = get_db()
+        trips = db.execute(
+            "SELECT * FROM trip WHERE user_id=?", (user_id,)
+        ).fetchall()
+
+        if len(trips) == 0:
+            return []
+        else:
+            return trips

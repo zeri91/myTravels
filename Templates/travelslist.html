@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" id="travelslist">
+    <h1>{% block title %} Travels {% endblock %}</h1>
+    {% for travel in travels %}
+    <div class="list-group sortable" id="travels-list">
+        <a href="#travel{{travel['id']}}" class="list-group-item list-group-item-action" data-toggle="collapse">
+            <span class="float-left">{{ travel['country'] }},  {{ travel['city'] }}</span>
+            <span class="float-right">{{ travel['arr_date'].year }}</span>
+        </a>
+        <div class="collapse" id="travel{{travel['id']}}">
+          <p>arrival date:{{ travel['arr_date'] }} / departure date:{{ travel['dep_date'] }}</p>
+          <p>type: {{travel['type']}}     hotel: {{travel['hotel']}}   cost: {{travel['cost']}}</p>
+          <p>notes: {{travel['notes']}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

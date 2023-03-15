@@ -18,3 +18,17 @@ CREATE TABLE locations (
   timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user (id)
 )
+
+CREATE TABLE trip (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL, 
+  country TEXT NOT NULL, 
+  city TEXT, 
+  arr_date DATE,
+  dep_date DATE,
+  type TEXT NOT NULL CHECK (type IN ('leisure', 'work', 'other')), 
+  hotel TEXT, 
+  cost FLOAT, 
+  notes TEXT,
+  FOREIGN KEY (user_id) REFERENCES user (id)
+)

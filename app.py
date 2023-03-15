@@ -23,6 +23,8 @@ import pandas as pd
 # Internal imports for the DB
 from db import init_db_command
 from user import User
+# useful functions
+import utils
 
 # Configuration
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
@@ -62,7 +64,8 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 def load_user(user_id):
     return User.get(user_id)
 
-# Executed before every request
+# Executed before every request, if authenticated, retrieve all the 
+# user saved locations
 @app.before_request
 def load_locations():
     if current_user.is_authenticated:
@@ -72,13 +75,8 @@ def load_locations():
         g.locations = []
 
 # context passato a tutte le route con lo stato dell'utente
-@app.context_processor
-def usr_context():
-    # using Flask-Login library, we can easily check if a user is logged in
-    if current_user.is_authenticated:
-        return {'usr_status': current_user.name, 'pagina':'profile'}
-    else:
-        return {'usr_status': 'click here to login', 'pagina':'login'}
+# @app.context_processor
+# def usr_context():
 
 @app.route('/')
 def index():
@@ -97,20 +95,56 @@ def registrazione():
 @app.route('/map', methods=['GET', 'POST'])
 def map(): 
     airports = pd.read_csv("./data/airports-v2.csv").to_dict('records')
+    monuments = pd.read_csv("./data/monuments.csv").to_dict('records')
     eco_footprints = pd.read_csv("./data/footprint.csv")
     max_eco_footprint = eco_footprints["Ecological footprint"].max()
     political_countries = ("./static/admin_0_countries.geojson")
+    # seven_seas = ("./static/geography_marine_polys.geojson")
 
     m = folium.Map(
-        location=(30, 10), zoom_start=3, tiles="cartodb positron", 
-        width='80%', height='80%',
+        location=(30, 10), zoom_start=3, tiles="Stamen Watercolor", 
+        width='80%', height='80%', max_bounds=True,
         )
     
-    # load the favourit locations of the user
+    # Creare dei FeatureGroup per ogni categoria di marker
+    marker_airports = folium.FeatureGroup(name='airports', show=False)
+    marker_monuments = folium.FeatureGroup(name='monuments', show=True)
     marker_favourits = folium.FeatureGroup(name='favourits', show=True)
+
+    # load the favourit locations of the user
     for l in g.locations:
-        folium.Marker(location=[l['lat'], l['long']], icon=folium.Icon(color='yellow', icon='star')).add_to(marker_favourits)
-    marker_favourits.add_to(m)   
+        folium.Marker(location=[l['lat'], l['long']], tooltip=l['name'], icon=folium.Icon(color='blue', icon='star')).add_to(marker_favourits)
+     
+    # Aggiungere i markers ai FeatureGroup
+    utils.add_to_featuregrp(airports, marker_airports, 'airports')
+    utils.add_to_featuregrp(monuments, marker_monuments, 'monuments')
+
+    # add the colored countries layer to the map
+    folium.Choropleth(
+        geo_data = political_countries,
+        data = eco_footprints,
+        columns=["Country/region", "Ecological footprint"],
+        key_on="feature.properties.name",
+        bins=[0, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, max_eco_footprint],
+        fill_color="RdYlGn_r",
+        fill_opacity=0.8,
+        line_opacity=0.3,
+        nan_fill_color="transparent",
+        legend_name="Ecological footprint per capita",
+        name="Countries by ecological footprint per capita",
+    ).add_to(m)
+
+    # Aggiungere i FeatureGroup alla mappa
+    marker_airports.add_to(m)
+    marker_monuments.add_to(m)  
+    marker_favourits.add_to(m)
+
+    # coloro i mari
+    #folium.GeoJson(
+    #    data=seven_seas,
+    #    style_function=lambda x: utils.get_water_style(),
+    #    name = "seven seas"
+    #).add_to(m)
 
     # prende le ricerche degli utenti e richiama l'API per trovare le coordinate 
     # del luogo richiesto e impostare un marker
@@ -124,55 +158,6 @@ def map():
         else:
             flash('Location not valid', 'error')
 
-    # folium.GeoJson(political_countries).add_to(m)
-
-    folium.Choropleth(
-        geo_data = political_countries,
-        data = eco_footprints,
-        columns=["Country/region", "Ecological footprint"],
-        key_on="feature.properties.name",
-        bins=[0, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, max_eco_footprint],
-        fill_color="RdYlGn_r",
-        fill_opacity=0.8,
-        line_opacity=0.3,
-        nan_fill_color="white",
-        legend_name="Ecological footprint per capita",
-        name="Countries by ecological footprint per capita",
-    ).add_to(m)
-
-    # Creare un FeatureGroup per contenere tutti i marker
-    marker_airports = folium.FeatureGroup(name='airports', show=False)
-    marker_monuments = folium.FeatureGroup(name='monuments', show=True)
-    
-    # Aggiungere i markers al FeatureGroup
-    for a in airports:
-        nome = a['name']
-        lat = a['latitude_deg']
-        lon = a['longitude_deg']
-        #marker = folium.Marker(location=[lat, lon], tooltip=nome, icon=folium.Icon(color='blue', icon='plane'))
-        #marker.add_to(m)
-        folium.Marker(location=[lat, lon], tooltip=nome, icon=folium.Icon(color='blue', icon='plane')).add_to(marker_airports)
-    
-    # Aggiungere il FeatureGroup alla mappa
-    marker_airports.add_to(m)
-    
-    # aggiungi il layer con qualche monumento di test 
-    folium.Marker(location=[38.897, -77.036], tooltip="white house", icon=folium.features.CustomIcon('./static/images/icons/white-house-c.png', icon_size=(30,30))).add_to(marker_monuments)
-    folium.Marker(location=[41.890, 12.492], tooltip="colosseum", icon=folium.features.CustomIcon('./static/images/icons/colosseum-c.png', icon_size=(30,30))).add_to(marker_monuments)
-    folium.Marker(location=[48.852, 2.350], tooltip="notre dame", icon=folium.features.CustomIcon('./static/images/icons/notre-dame-c.png', icon_size=(30,30))).add_to(marker_monuments)
-    folium.Marker(location=[27.173, 78.042], tooltip="taj mahal", icon=folium.features.CustomIcon('./static/images/icons/taj-mahal.png', icon_size=(30, 30))).add_to(marker_monuments)
-    folium.Marker(location=[43.7230159, 10.3966321974895], tooltip="leaning tower", icon=folium.features.CustomIcon('./static/images/icons/leaning-tower-c.png', icon_size=(30, 30))).add_to(marker_monuments)
-
-    marker_monuments.add_to(m)
-    
-   # search = plugins.Search(layer=marker_monuments,
-   #                      geom_type='Point',
-   #                      position='topright',
-   #                      placeholder='Cerca...',
-   #                      collapsed=False,
-   #                      )
-   # search.add_to(m)
-
     # Add layer control to the map
     folium.LayerControl(position='topright').add_to(m)
 
@@ -184,6 +169,19 @@ def map():
 
     context = {'header': header, 'body_html': body_html, 'script': script}
     return render_template('map_v2.html', **context)
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', name=current_user.name)
+
+@app.route('/travelslist')
+@login_required
+def travels_list():
+    if not hasattr(g, 'trips'):
+        g.trips = User.get_user_trips(current_user.id)
+
+    return render_template('travelslist.html', travels=g.trips)
 
 @app.route("/login")
 def login():
@@ -259,7 +257,7 @@ def callback():
     login_user(user)
 
     # Send user back to homepage
-    return redirect(url_for("index"))
+    return redirect(url_for("profile"))
 
 @app.route("/logout")
 #The @login_required decorator is another tool from the Flask-Login toolbox and 

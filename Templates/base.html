@@ -14,6 +14,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <!-- Used in the map page -->
     {% block head %}{% endblock %}
 </head>
@@ -33,9 +36,6 @@
               <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="registrazione">Sign in</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="map">My map</a>
             </li>
             <li class="nav-item">
@@ -44,9 +44,34 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
             </li>
+            {% if not current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{{pagina}}">{{usr_status}}</a>
+              <a href="{{ url_for('login') }}" class="nav-link">
+                  Login
+              </a>
             </li>
+            {% endif %}
+            {% if not current_user.is_authenticated %}
+            <li class="nav-item">
+              <a href="{{ url_for('registrazione') }}" class="nav-link">
+                  Sign Up
+              </a>
+            </li>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">              
+              <a href="{{ url_for('profile') }}" class="nav-link">
+                Profile
+              </a>
+            </li>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a href="{{ url_for('logout') }}" class="nav-link">
+                Logout
+              </a>
+            </li>
+            {% endif %}           
           </ul>
         </div>
       </nav>
@@ -55,17 +80,15 @@
       {% for message in get_flashed_messages(with_categories=false) %}
             <div class="alert-msg">{{ message }}</div>
       {% endfor %}
+    </div>
+    <div class="main-content">
       {% block content %}
       {% endblock %}
     </div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi94Ns3"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
-        integrity="sha384-xgncldf+GzyjIm0PmZGVsqAlBk1+7Vn0jI8VJW+vhvdd7Vg3ecq3NT8ZxpLkZv+7"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
