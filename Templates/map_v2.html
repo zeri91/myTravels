@@ -1,27 +1,47 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    {{ header|safe }}
+{{ header|safe }}    
 {% endblock %}
 
 {% block content %}
-  <!-- Barra di ricerca e pulsanti -->
-  <div class="search-bar">
-    <span>Your map</span>
-    <form method="POST" class="form-inline mt-3">
-      <input class="form-control mr-2" type="search" placeholder="Cerca localitá" id="address" name="address", value="{{ request.form['address'] }}">
-      <button class="btn btn-outline-success" type="submit">Cerca</button>
-      <button class="btn btn-outline-primary ms-2" type="button">Pulsante 1</button>
-      <button class="btn btn-outline-secondary ms-2" type="button">Pulsante 2</button>
+  <div class="container mt-5 map-page">
+    <!-- Barra di ricerca e pulsanti -->
+    <form method="POST" class="row gx-3 gy-2 align-items-center">
+      <div class="col-sm-3">
+        <label class="visually-hidden" for="address">Search</label>
+        <input type="text" class="form-control" id="address" name="address" placeholder="find your location" value="{{ request.form['address'] }}">
+      </div>
+      <div class="col-sm-3">
+        <label class="visually-hidden" for="location">location</label>
+        <div class="input-group">
+          <div class="input-group-text">@</div>
+          <input type="text" class="form-control" id="location" placeholder="empty">
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <label class="visually-hidden" for="specificSizeSelect">Preference</label>
+        <select class="form-select" id="specificSizeSelect">
+          <option selected>Choose...</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
     </form>
-  </div>
-  {% if error_message %}
-    <div class="alert alert-danger mt-3" role="alert">
-      {{ error_message }}
+
+    <!-- Error Messages -->
+    {% if error_message %}
+      <div class="alert alert-danger mt-3" role="alert">
+        {{ error_message }}
+      </div>
+    {% endif %}
+    <div class="map-container">
+        {{ body_html|safe }}
     </div>
-  {% endif %}
-  <div class="map-container">
-      {{ body_html|safe }}
   </div>
 {% endblock %}
 

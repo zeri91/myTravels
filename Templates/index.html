@@ -4,34 +4,75 @@
     
     
 {% block content %}
-<div id="home">
-    <!-- Header -->
-    <header class="bg-primary text-white py-5">
-    <div class="container">
-        <h1>Welcome to MyTravels</h1>
-        <p class="lead">Your one-stop shop for all your travel needs</p>
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container my-5">
-    <div class="row">
-        <div class="col-md-8">
-        <h2 class="mb-4">Discover new places to explore</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus pretium, eros nec blandit pretium, arcu nisl
-            feugiat dolor, vel mollis magna mi sit amet ex. Nunc id augue et lacus rutrum auctor vel at erat. Curabitur
-            tristique, ante a ullamcorper tincidunt, purus nisl aliquam lacus, at varius libero mi id nunc.</p>
-        <p>Curabitur eget arcu vitae tellus posuere efficitur. Donec vel velit ac ex hendrerit facilisis non non ante.
-            Donec blandit, dolor vel suscipit posuere, quam ipsum finibus augue, eget sagittis dolor enim non odio.
-            Vestibulum lobortis erat sed aliquam laoreet. Duis iaculis augue sit amet arcu tempor, eget auctor elit
-            egestas.</p>
-        <a href="#" class="btn btn-primary mt-4">Learn More</a>
+    <div class="carousel-inner">
+      <div class="carousel-item active">            
+        <div class="carousel-caption">
+            <div class="row">
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="banner-info">
+                        <h5>create <br> your map</h5>
+            <p>Discover on map the world that you visited</p>
+            <p><a href="#" class="btn mt-3">Learn More</a></p>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-12 col-12">
+                    <div class="imgBox">
+                        <img src="static/images/1b.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4">
-        <h2 class="mb-4">Why MyTravels?</h2>
-        <ul class="list-group">
-            <li class="list-group-item">Convenient one-stop shop</li>
-        </ul>
+      </div>
+      <div class="carousel-item">           
+        <div class="carousel-caption">
+            <div class="row">
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="banner-info">
+                        <h5>Keep track <br> don't miss any trip</h5>
+            <p>Create your travels' list</p>
+            <p><a href="#" class="btn mt-3">Learn More</a></p>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-12 col-12">
+                    <div class="imgBox">
+                        <img src="static/images/1.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-caption">
+            <div class="row">
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="banner-info">
+                        <h5>Share <br> with your friends</h5>
+            <p>Let others know the percentage of the world you explored, how many days of your life you spent traveling and much more</p>
+            <p><a href="#" class="btn mt-3">Learn More</a></p>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-12 col-12">
+                    <div class="imgBox">
+                        <img src="static/images/3.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
 </div>
 {% endblock %}

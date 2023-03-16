@@ -1,22 +1,7 @@
-html, body {
-  height: 100%;
+.map-page {
+  font-size: medium;
+  font-family: Arial, Helvetica, sans-serif;
 }
-
-.main-content {
-  height: 100%;
-}
-/*
-#home {
-  background-image: url('/static/images/main-bg.jpg');
-  background-size: cover;
-}
-
-#travelslist {
-  background-image: url('/static/images/map.jpg');
-  background-size: cover;
-  height: 100hv;
-}
-*/
 
 .map-container {
     width: calc(100% - 20px);
@@ -25,7 +10,7 @@ html, body {
     /*width: 100vw;*/
   }
 
-.search-bar {
+  .search-bar {
     background-color: #4282CA;
     padding: 5px;
     margin: 10px;
@@ -74,3 +59,169 @@ html, body {
   background-color: #f3f3f3
 }
 
+.travels-list {
+  font-size: medium;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+	font-family: 'Teko', sans-serif;
+}
+.navbar-nav a {
+	font-size: 18px;
+	text-transform: uppercase;
+	font-weight: 500;
+}
+.navbar-light .navbar-brand {
+	color: #000;
+	font-size: 25px;
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+.navbar-brand span {
+	color: green;
+}
+.navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover {
+	color: #000;
+}
+.navbar-light .navbar-nav .nav-link {
+	color: #000;
+}
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+	color: #000;
+}
+.w-100 {
+	height: 100vh;
+}
+.navbar-toggler {
+	padding: 1px 5px;
+	font-size: 18px;
+	line-height: 0.3;
+	background: #fff;
+}
+.carousel-item {
+	height: 100vh;
+	min-height: 300px;
+	background-color: #f7f5eb;
+}
+.carousel-caption {
+	bottom: 0;
+	z-index: 2;
+	text-align: left;
+}
+.carousel-caption h5 {
+	font-size: 45px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	margin-top: 25px;
+	color: #262626;
+}
+.carousel-caption p {
+	font-size: 18px;
+	line-height: 1.9;
+	color: #262626;
+}
+.banner-info .btn {
+	padding: 10px 60px;
+	font-size: 30px;
+	text-transform: uppercase;
+	color: #ffff;
+	background: green;
+}
+.banner-info {
+	padding-top: 25%;
+}
+.imgBox img {
+	width: 650px;
+}
+.carousel-control-prev-icon, .carousel-control-next-icon {
+	height: 80px;
+	width: 80px;
+	outline: black;
+	background-size: 100%, 100%;
+	border-radius: 50%;
+	background-image: none;
+	color: #fff;
+	background: green;
+}
+.carousel-control-next-icon:after {
+	content: '>';
+	font-size: 55px;
+	color: #fff;
+}
+.carousel-control-prev-icon:after {
+	content: '<';
+	font-size: 55px;
+	color: #fff;
+}
+.carousel-indicators [data-bs-target] {
+	background-color: green;
+}
+.navbar-light .navbar-toggler {
+	color: #FFF;
+	border-color: transparent;
+	background: green;
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+	.navbar-nav {
+		text-align: center;
+	}
+	.navbar-collapse {
+		background: green;
+	}
+	.carousel-caption {
+		bottom: 370px;
+	}
+	.carousel-caption p {
+		width: 100%;
+	}
+	.navbar-collapse .nav-link {
+		color: #fff !important;
+	}
+	.carousel-caption {
+		bottom: 0;
+		text-align: center;
+	}
+}
+@media only screen and (max-width: 767px) {
+	.navbar-nav {
+		text-align: center;
+	}
+	.navbar-collapse {
+		background: green;
+	}
+	.navbar-collapse .nav-link {
+		color: #fff !important;
+	}
+	.carousel-caption {
+		bottom: 0;
+		text-align: center;
+	}
+	.carousel-caption h5 {
+		font-size: 17px;
+	}
+	.carousel-caption p {
+		width: 100%;
+		line-height: 1.6;
+		font-size: 12px;
+	}
+	.banner-info .btn {
+		padding: 0 15px;
+		font-size: 20px;
+	}
+	.imgBox .img-fluid {
+		max-width: 80%;
+		height: auto;
+	}
+	.carousel-control-prev-icon, .carousel-control-next-icon {
+		height: 50px;
+		width: 50px;
+	}
+	.carousel-control-next-icon:after {
+		font-size: 30px;
+	}
+	.carousel-control-prev-icon:after {
+		font-size: 30px;
+	}
+}
