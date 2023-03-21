@@ -1,9 +1,65 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<script src="https://kit.fontawesome.com/f0fc554e33.js" crossorigin="anonymous"></script>
+
+{% endblock %}
+{% block title %} MyTravels {% endblock %}
+
 {% block content %}
 <div class="container mt-5 travels-list">
-    <h1>{% block title %} Travels {% endblock %}</h1>
-    
+
+    <!-- Add Travels -->
+    <div class="row d-flex justify-content-left align-items-left" x-data="{ activeTab: null }">
+        <div class="col-md-8">
+            <form id="regForm" x-data="{inputDest: '', inputPeople: '', inputDate: '', inputTrans: '', inputCost: '', inputHotel: '', inputNotes: ''}">
+                <div class="all-steps" id="all-steps"> 
+                  <button type="button" :class="{ 'filled': inputDest, 'empty': !inputDest }" @click="activeTab === 1 ? activeTab = null : activeTab = 1"><i class="fa fa-map-marker"></i></button> 
+                  <button type="button" :class="{ 'filled': inputPeople, 'empty': !inputPeople }" @click="activeTab === 2 ? activeTab = null : activeTab = 2"><i class="fas fa-user-friends"></i></button>
+                  <button type="button" :class="{ 'filled': inputDate, 'empty': !inputDate }" @click="activeTab === 3 ? activeTab = null : activeTab = 3"><i class="fa fa-calendar-days"></i></button>
+                  <button type="button" :class="{ 'filled': inputTrans, 'empty': !inputTrans }" @click="activeTab === 4 ? activeTab = null : activeTab = 4"><i class="fa fa-car"></i></button>
+                  <button type="button" :class="{ 'filled': inputCost, 'empty': !inputCost }" @click="activeTab === 5 ? activeTab = null : activeTab = 5"><i class="fa fa-wallet"></i></button>
+                  <button type="button" :class="{ 'filled': inputHotel, 'empty': !inputHotel }" @click="activeTab === 6 ? activeTab = null : activeTab = 6"><i class="fas fa-hotel"></i></button>
+                  <button type="button" :class="{ 'filled': inputNotes, 'empty': !inputNotes }" @click="activeTab === 7 ? activeTab = null : activeTab = 7"><i class="fa fa-clipboard"></i></button>
+                </div>
+
+                <div class="input-group tab" x-show="activeTab === 1" x-transition>
+                    <span class="input-group-text">Destination</span>
+                    <input type="text" class="form-control" placeholder="Destination" name="destination" x-model="inputDest">
+                </div>
+                <div class="tab" x-show="activeTab === 3" x-transition>
+                    <label for="arrDate">Arrival Date:</label>
+                    <input id="arrDate" class="form-control" type="date" name="ad" x-model="inputDate"/>                    
+                </div>
+                <div class="input-group tab" x-show="activeTab === 4" x-transition>
+                    <span class="input-group-text">Transportation</span>
+                    <input type="text" class="form-control" aria-label="Transportation" name="Transportation" x-model="inputTrans">
+                </div>
+                <div class="input-group tab" x-show="activeTab === 5" x-transition>
+                    <span class="input-group-text">Total Cost</span>
+                    <input type="text" class="form-control" aria-label="Dollar amount" name="cost" x-model="inputCost">
+                    <span class="input-group-text">$</span>
+                </div>
+                <div class="input-group tab" x-show="activeTab === 2" x-transition>
+                    <span class="input-group-text">People</span>
+                    <input type="text" class="form-control" placeholder="with whom you traveled" name="people" x-model="inputPeople">
+                </div>
+                <div class="input-group tab" x-show="activeTab === 6" x-transition>
+                    <span class="input-group-text">Accomodation</span>
+                    <input type="text" class="form-control" placeholder="where you stayed" name="accomodation" x-model="inputHotel">
+                </div>
+                <div class="input-group tab" x-show="activeTab === 7" x-transition>
+                    <span class="input-group-text">Notes</span>
+                    <input type="text" class="form-control" placeholder="Anything else to remember" name="notes" x-model="inputNotes">
+                </div>
+                <div class="thanks-message text-center" id="text-message" x-show="activeTab === 100" x-transition>
+                    <h3>Added to your list!</h3>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Travels list -->
     <div class="list-group">
         {% for travel in travels %}
         <a href="#travel{{travel['id']}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">
@@ -19,4 +75,9 @@
     </div>
     
 </div>
+
+{% endblock %}
+
+{% block script %}
+
 {% endblock %}

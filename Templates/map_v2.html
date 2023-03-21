@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-{{ header|safe }}    
+  {{ header|safe }}    
 {% endblock %}
 
 {% block content %}
@@ -35,7 +35,7 @@
 
     <!-- Error Messages -->
     {% if error_message %}
-      <div class="alert alert-danger mt-3" role="alert">
+      <div class="alert alert-danger" role="alert">
         {{ error_message }}
       </div>
     {% endif %}

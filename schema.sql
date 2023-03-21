@@ -17,7 +17,7 @@ CREATE TABLE locations (
   type TEXT NOT NULL CHECK (type IN ('favourites', 'visited', 'wishlist')),
   timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user (id)
-)
+);
 
 CREATE TABLE trip (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,4 +31,4 @@ CREATE TABLE trip (
   cost FLOAT, 
   notes TEXT,
   FOREIGN KEY (user_id) REFERENCES user (id)
-)
+);

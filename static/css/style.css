@@ -48,22 +48,12 @@
 
   .alert-msg {
     padding: 20px;
-    margin: 5px;
+    margin-top: 5px;
     color: #970020;
     background-color: #ffd5de;
 }
 
-.travel {
-  padding: 10px;
-  margin: 5px;
-  background-color: #f3f3f3
-}
-
-.travels-list {
-  font-size: medium;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
+/* Main theme style */
 body {
 	font-family: 'Teko', sans-serif;
 }
@@ -136,8 +126,8 @@ body {
 	width: 650px;
 }
 .carousel-control-prev-icon, .carousel-control-next-icon {
-	height: 80px;
-	width: 80px;
+	height: 60px;
+	width: 60px;
 	outline: black;
 	background-size: 100%, 100%;
 	border-radius: 50%;
@@ -147,12 +137,12 @@ body {
 }
 .carousel-control-next-icon:after {
 	content: '>';
-	font-size: 55px;
+	font-size: 50px;
 	color: #fff;
 }
 .carousel-control-prev-icon:after {
 	content: '<';
-	font-size: 55px;
+	font-size: 50px;
 	color: #fff;
 }
 .carousel-indicators [data-bs-target] {
@@ -163,6 +153,9 @@ body {
 	border-color: transparent;
 	background: green;
 }
+
+
+/* Main theme style on smaller screens */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
 	.navbar-nav {
 		text-align: center;
@@ -224,4 +217,98 @@ body {
 	.carousel-control-prev-icon:after {
 		font-size: 30px;
 	}
+}
+
+
+/* Travel list style (form and list) */
+#regForm {
+    margin: 5px auto;
+    font-family: Raleway;
+    padding: 10px;
+    border-radius: 5px;
+}
+input {
+    padding: 10px;
+    width: 100%;
+    font-size: 17px;
+    font-family: Raleway;
+    border: 1px solid #aaaaaa;
+    border-radius: 10px;
+}
+.tab input:focus{
+  border:1px solid #6a1b9a !important;
+  outline: none;
+}
+input.invalid {
+    border:1px solid #e03a0666;
+}
+.tab {
+    font-family: Raleway;
+	width: 80%;
+}
+button {
+    border: none;
+    border-radius: 0%; /* 50% to make icon a circle */
+    padding: 10px 20px;
+    font-size: 17px;
+    font-family: Raleway;
+    cursor: pointer
+}
+button:hover {
+    opacity: 0.8
+}
+button:focus{
+  outline: none !important;
+}
+.empty{
+    color: black;
+}
+.filled{
+	background-color: green;
+    color: #ffffff;
+}
+.all-steps{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 80%;
+    display: inline-flex;
+    justify-content: center;
+}
+.step {
+    height: 40px;
+    width: 40px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    color: #6a1b9a;
+    opacity: 0.5;
+}
+.step.active {
+    opacity: 1
+}
+.step.finish {
+   color: #fff;
+   background: #6a1b9a;
+   opacity: 1;
+
+}
+.all-steps {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px
+}
+.travel {
+	padding: 10px;
+	margin: 5px;
+	background-color: #f3f3f3
+}  
+.travels-list {
+	font-size: medium;
+	font-family: Arial, Helvetica, sans-serif;
 }
