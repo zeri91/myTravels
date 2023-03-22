@@ -224,12 +224,9 @@ body {
 #regForm {
     margin: 5px auto;
     font-family: Raleway;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 5px;
 }
 input {
-    padding: 10px;
-    width: 100%;
     font-size: 17px;
     font-family: Raleway;
     border: 1px solid #aaaaaa;
@@ -268,12 +265,12 @@ button:focus{
     color: #ffffff;
 }
 .all-steps{
-    text-align: center;
+    text-align: left;
     margin-top: 30px;
     margin-bottom: 30px;
-    width: 80%;
+    width: 100%;
     display: inline-flex;
-    justify-content: center;
+    justify-content: left;
 }
 .step {
     height: 40px;
@@ -312,3 +309,13 @@ button:focus{
 	font-size: medium;
 	font-family: Arial, Helvetica, sans-serif;
 }
+.orderBar {
+	background-color: aqua;
+	text-align: right;
+	justify-content: right;
+}
+/*
+.b1{
+	 border: 1px solid #000; 
+}
+*/
