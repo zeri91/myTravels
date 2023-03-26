@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
+<!-- Import the macro to render the form -->
+{% from "_render_field.html" import render_field, render_radio_field %}
+
 {% block head %}
 <script src="https://kit.fontawesome.com/f0fc554e33.js" crossorigin="anonymous"></script>
-
 {% endblock %}
 {% block title %} MyTravels {% endblock %}
 
@@ -12,49 +14,26 @@
     <!-- Add Travels -->
     <div class="row b1 d-flex justify-content-left align-items-left" x-data="{ activeTab: null }">
         <div class="col-md-5 b1">
-            <form id="regForm" x-data="{inputDest: '', inputPeople: '', inputDate: '', inputTrans: '', inputCost: '', inputHotel: '', inputNotes: ''}">
+            <form class="needs-validation" id="regForm" method="POST" x-data="{inputDest: '', inputPeople: '', inputDate: '', inputType: '', inputCost: '', inputHotel: '', inputNotes: '', submitMsg: ''}" novalidate>
                 <div class="all-steps b1" id="all-steps"> 
-                  <button type="button" :class="{ 'filled': inputDest, 'empty': !inputDest }" @click="activeTab === 1 ? activeTab = null : activeTab = 1"><i class="fa fa-map-marker"></i></button> 
-                  <button type="button" :class="{ 'filled': inputPeople, 'empty': !inputPeople }" @click="activeTab === 2 ? activeTab = null : activeTab = 2"><i class="fas fa-user-friends"></i></button>
-                  <button type="button" :class="{ 'filled': inputDate, 'empty': !inputDate }" @click="activeTab === 3 ? activeTab = null : activeTab = 3"><i class="fa fa-calendar-days"></i></button>
-                  <button type="button" :class="{ 'filled': inputTrans, 'empty': !inputTrans }" @click="activeTab === 4 ? activeTab = null : activeTab = 4"><i class="fa fa-car"></i></button>
-                  <button type="button" :class="{ 'filled': inputCost, 'empty': !inputCost }" @click="activeTab === 5 ? activeTab = null : activeTab = 5"><i class="fa fa-wallet"></i></button>
-                  <button type="button" :class="{ 'filled': inputHotel, 'empty': !inputHotel }" @click="activeTab === 6 ? activeTab = null : activeTab = 6"><i class="fas fa-hotel"></i></button>
-                  <button type="button" :class="{ 'filled': inputNotes, 'empty': !inputNotes }" @click="activeTab === 7 ? activeTab = null : activeTab = 7"><i class="fa fa-clipboard"></i></button>
+                  <button type="button" :class="{ 'filled': inputDest, 'empty': !inputDest }" @click="activeTab === 1 ? activeTab = null : activeTab = 1"><i class="fa-solid fa-map-location-dot"></i></button> 
+                  <button type="button" :class="{ 'filled': inputPeople, 'empty': !inputPeople }" @click="activeTab === 2 ? activeTab = null : activeTab = 2"><i class="fa-solid fa-user-group"></i></button>
+                  <button type="button" :class="{ 'filled': inputDate, 'empty': !inputDate }" @click="activeTab === 3 ? activeTab = null : activeTab = 3"><i class="fa-solid fa-calendar-days"></i></button>
+                  <button type="button" :class="{ 'filled': inputType, 'empty': !inputType }" @click="activeTab === 4 ? activeTab = null : activeTab = 4"><i class="fa-solid fa-champagne-glasses"></i></button>
+                  <button type="button" :class="{ 'filled': inputCost, 'empty': !inputCost }" @click="activeTab === 5 ? activeTab = null : activeTab = 5"><i class="fa-solid fa-wallet"></i></button>
+                  <button type="button" :class="{ 'filled': inputHotel, 'empty': !inputHotel }" @click="activeTab === 6 ? activeTab = null : activeTab = 6"><i class="fa-solid fa-hotel"></i></button>
+                  <button type="button" :class="{ 'filled': inputNotes, 'empty': !inputNotes }" @click="activeTab === 7 ? activeTab = null : activeTab = 7"><i class="fa-solid fa-paste"></i></button>
+                  <button type="submit" class="" :class="{ 'filled': submitMsg, 'empty': !submitMsg }">Add</button>
                 </div>
-        
-                <div class="input-group tab" x-show="activeTab === 1" x-transition>
-                    <span class="input-group-text">Destination</span>
-                    <input type="text" class="form-control" placeholder="Destination" name="destination" x-model="inputDest" required>
-                </div>
-                <div class="tab" x-show="activeTab === 3" x-transition>
-                    <label for="arrDate">Arrival Date:</label>
-                    <input id="arrDate" class="form-control" type="date" name="ad" x-model="inputDate"/>                    
-                </div>
-                <div class="input-group tab" x-show="activeTab === 4" x-transition>
-                    <span class="input-group-text">Transportation</span>
-                    <input type="text" class="form-control" aria-label="Transportation" name="Transportation" x-model="inputTrans">
-                </div>
-                <div class="input-group tab" x-show="activeTab === 5" x-transition>
-                    <span class="input-group-text">Total Cost</span>
-                    <input type="text" class="form-control" aria-label="Dollar amount" name="cost" x-model="inputCost">
-                    <span class="input-group-text">$</span>
-                </div>
-                <div class="input-group tab" x-show="activeTab === 2" x-transition>
-                    <span class="input-group-text">People</span>
-                    <input type="text" class="form-control" placeholder="with whom you traveled" name="people" x-model="inputPeople" required>
-                </div>
-                <div class="input-group tab" x-show="activeTab === 6" x-transition>
-                    <span class="input-group-text">Accomodation</span>
-                    <input type="text" class="form-control" placeholder="where you stayed" name="accomodation" x-model="inputHotel">
-                </div>
-                <div class="input-group tab" x-show="activeTab === 7" x-transition>
-                    <span class="input-group-text">Notes</span>
-                    <input type="text" class="form-control" placeholder="Anything else to remember" name="notes" x-model="inputNotes">
-                </div>
-                <div class="thanks-message text-center" id="text-message" x-show="activeTab === 100" x-transition>
-                    <h3>Added to your list!</h3>
-                </div>
+                {{ form.csrf_token }}
+
+                {{ render_field(form.destination, 1, placeholder='find location') }}
+                {{ render_radio_field(form.category, 4) }} 
+                {{ render_field(form.cost, 5) }}
+                {{ render_field(form.people, 2, placeholder='who was with you') }}
+                {{ render_field(form.accomodation, 6, placeholder='where you slept') }}
+                {{ render_field(form.notes, 7, placeholder='remarkable things') }} 
+                 
             </form>
         </div>
     </div>
@@ -72,7 +51,7 @@
     {% for travel in travels %}
     <div class="row b1 d-flex justify-content-left align-items-left list-group">
         <a href="#travel{{travel['id']}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">
-            <span class="float-start">{{ travel['country'] }},  {{ travel['city'] }}</span>
+            <span class="float-start">{{ travel['country']}}{{", " ~ travel['city'] if travel['city']}}</span>
             <span class="float-end">{{ travel['arr_date'].year }}</span>
         </a>
         <div class="collapse list-group-item" id="travel{{travel['id']}}">
@@ -87,5 +66,13 @@
 {% endblock %}
 
 {% block script %}
-
+$(function () {
+    $("form.needs-validation").on("submit", function (event) {
+      if (this.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      $(this).addClass("was-validated");
+    });
+  });
 {% endblock %}

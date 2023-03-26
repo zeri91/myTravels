@@ -15,28 +15,45 @@ from flask_login import (
 )
 from oauthlib.oauth2 import WebApplicationClient
 import requests
-from flask_sqlalchemy import SQLAlchemy
 import folium
 from folium import plugins
 from folium.plugins import MarkerCluster
 import pandas as pd
 
+# sqlAlchemy
+from flask_sqlalchemy import SQLAlchemy
+from models import *
+
+# flask-wtf
+from forms import AddTripForm
+
 # Internal imports for the DB
 from db import init_db_command
-from user import User
+#from user import User
+
 # useful functions
 import utils
 
-# Configuration
+# Global Vars
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
-GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
+GOOGLE_DISCOVERY_URL = ("https://accounts.google.com/.well-known/openid-configuration")
 POSITIONSTACK_KEY = os.environ.get("POSITIONSTACK_KEY")
+
+# OAuth2 client setup to communicate with Google server
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+
+# sqlAlchemy configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+# Creazione del database
+with app.app_context():
+    db.create_all()
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest
@@ -55,13 +72,10 @@ except sqlite3.OperationalError:
     # Assume it's already been created
     pass
 
-# OAuth2 client setup to communicate with Google server
-client = WebApplicationClient(GOOGLE_CLIENT_ID)
-
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return db.get_or_404(User, user_id)
 
 # Executed before every request, if authenticated, retrieve all the 
 # user saved locations
@@ -69,7 +83,8 @@ def load_user(user_id):
 def load_locations():
     if current_user.is_authenticated:
         if not hasattr(g, 'locations') or not g.locations:
-            g.locations = User.get_user_locations(current_user.id)
+            pass
+            #g.locations = User.get_user_locations(current_user.id)
     else:
         g.locations = []
 
@@ -144,7 +159,7 @@ def map():
     if request.method == 'POST':
         address = request.form['address']
         api_key = POSITIONSTACK_KEY
-        lat, lon = get_lat_long(address, api_key)
+        lat, lon = utils.get_lat_long(address, api_key)
         if lat and lon:
             folium.Marker(location=[lat, lon], popup=address).add_to(m)
             #return m._repr_html_()
@@ -180,13 +195,19 @@ def map():
 def profile():
     return render_template('profile.html', name=current_user.name)
 
-@app.route('/travelslist')
+@app.route('/travelslist', methods=['GET', 'POST'])
 @login_required
 def travels_list():
     if not hasattr(g, 'trips'):
-        g.trips = User.get_user_trips(current_user.id)
+        g.trips = current_user.trips
+    addTripForm = AddTripForm()
 
-    return render_template('travelslist.html', travels=g.trips)
+    # if form has been submitted and validators return true
+    if addTripForm.validate_on_submit(): 
+        return 'Trip added to your list!'
+        #add here the insert into DB
+
+    return render_template('travelslist.html', form=addTripForm, travels=g.trips)
 
 @app.route("/login")
 def login():
@@ -251,12 +272,13 @@ def callback():
     # Create a user in our db with the information provided
     # by Google
     user = User(
-        id_=unique_id, name=users_name, email=users_email, profile_pic=picture
+        id=unique_id, name=users_name, email=users_email, profile_pic=picture
     )
 
     # Doesn't exist? Add to database
-    if not User.get(unique_id):
-        User.create(unique_id, users_name, users_email, picture)
+    if not User.query.filter_by(id=unique_id).first():
+        db.session.add(user)
+        db.session.commit()
 
     # Begin user session by logging the user in
     login_user(user)
@@ -276,20 +298,6 @@ def logout():
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
-def get_lat_long(address, api_key):
-    url = 'http://api.positionstack.com/v1/forward'
-    params = {
-        'access_key': api_key,
-        'query': address,
-        'limit': 1
-    }
-    response = requests.get(url, params=params).json()
-    if response['data']:
-        lat = response['data'][0]['latitude']
-        lon = response['data'][0]['longitude']
-        return lat, lon
-    else:
-        return (None, None)
 
 if __name__ == '__main__':
     app.run(debug=True, ssl_context="adhoc")

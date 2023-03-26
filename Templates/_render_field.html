@@ -1,0 +1,25 @@
+<!-- Macro to render the flask-wtf forms -->
+
+{% macro render_field(field, tab_number) %}
+    <div class="input-group tab" x-show="activeTab === {{tab_number}}" x-transition>
+        <span class="input-group-text">{{ field.label.text }}</span>
+        {{ field(class_='form-control', **kwargs)|safe }}
+        {% for message in get_flashed_messages(with_categories=false) %}
+            <div class="alert-msg">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro render_radio_field(field, tab_number) %}
+    <div class="input-group tab" x-show="activeTab === {{tab_number}}" x-transition>
+        <label class="col-lg-2">{{ field.label.text }}</label>
+        <div class="col-lg-10">
+            {% for subfield in field %}
+                <div class="form-check form-check-inline">
+                    {{ subfield }}
+                    {{ subfield.label.text }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}

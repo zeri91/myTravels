@@ -26,8 +26,9 @@ CREATE TABLE trip (
   city TEXT, 
   arr_date DATE,
   dep_date DATE,
-  type TEXT NOT NULL CHECK (type IN ('leisure', 'work', 'other')), 
-  hotel TEXT, 
+  category TEXT NOT NULL CHECK (type IN ('leisure', 'work')), 
+  people TEXT,
+  accomodation TEXT, 
   cost FLOAT, 
   notes TEXT,
   FOREIGN KEY (user_id) REFERENCES user (id)

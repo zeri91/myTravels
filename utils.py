@@ -1,5 +1,6 @@
 # utils.py
 import folium
+import requests
 
 def add_to_featuregrp(list, featuregrp, type):
     if type == 'airports':
@@ -24,3 +25,18 @@ def get_water_style():
         'fillOpacity': 0.3,
         'opacity': 0.3
     }
+
+def get_lat_long(address, api_key):
+    url = 'http://api.positionstack.com/v1/forward'
+    params = {
+        'access_key': api_key,
+        'query': address,
+        'limit': 1
+    }
+    response = requests.get(url, params=params).json()
+    if response['data']:
+        lat = response['data'][0]['latitude']
+        lon = response['data'][0]['longitude']
+        return lat, lon
+    else:
+        return (None, None)
