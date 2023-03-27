@@ -23,3 +23,17 @@
         </div>
     </div>
 {% endmacro %}
+
+
+{% macro render_arr_dep_dates_field(field1, field2, tab_number) %}
+    <div class="input-group tab" x-show="activeTab === {{tab_number}}" x-transition>
+        <label class="col-lg-2">{{ field1.label.text }}</label>
+        <div class="col-lg-4">
+            {{ field1 }}
+        </div>
+        <label class="col-lg-2">{{ field2.label.text }}</label>
+        <div class="col-lg-4">
+            {{ field2 }}
+        </div>
+    </div>
+{% endmacro %}

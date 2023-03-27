@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 <!-- Import the macro to render the form -->
-{% from "_render_field.html" import render_field, render_radio_field %}
+{% from "_render_field.html" import render_field, render_radio_field, render_arr_dep_dates_field %}
 
 {% block head %}
 <script src="https://kit.fontawesome.com/f0fc554e33.js" crossorigin="anonymous"></script>
@@ -28,6 +28,7 @@
                 {{ form.csrf_token }}
 
                 {{ render_field(form.destination, 1, placeholder='find location') }}
+                {{ render_arr_dep_dates_field(form.arr_date, form.ret_date, 3)}}
                 {{ render_radio_field(form.category, 4) }} 
                 {{ render_field(form.cost, 5) }}
                 {{ render_field(form.people, 2, placeholder='who was with you') }}
@@ -50,11 +51,11 @@
     <!-- Travels list -->
     {% for travel in travels %}
     <div class="row b1 d-flex justify-content-left align-items-left list-group">
-        <a href="#travel{{travel['id']}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">
+        <a href="#travel{{travel['trip_id']}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">
             <span class="float-start">{{ travel['country']}}{{", " ~ travel['city'] if travel['city']}}</span>
             <span class="float-end">{{ travel['arr_date'].year }}</span>
         </a>
-        <div class="collapse list-group-item" id="travel{{travel['id']}}">
+        <div class="collapse list-group-item" id="travel{{travel['trip_id']}}">
           <p>arrival date:{{ travel['arr_date'] }} <br> departure date:{{ travel['dep_date'] }}</p>
           <p>type: {{travel['type']}}  <br>   hotel: {{travel['hotel']}} <br> cost: {{travel['cost']}}</p>
           <p>notes: {{travel['notes']}}</p>

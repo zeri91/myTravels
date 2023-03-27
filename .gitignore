@@ -4,6 +4,5 @@ sqlite_db
 instance
 static/images
 test.py
-user_schema.sql 
 schema.sql 
 
