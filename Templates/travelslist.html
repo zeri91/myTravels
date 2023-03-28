@@ -25,16 +25,18 @@
                   <button type="button" :class="{ 'filled': inputNotes, 'empty': !inputNotes }" @click="activeTab === 7 ? activeTab = null : activeTab = 7"><i class="fa-solid fa-paste"></i></button>
                   <button type="submit" class="" :class="{ 'filled': submitMsg, 'empty': !submitMsg }">Add</button>
                 </div>
-                {{ form.csrf_token }}
 
                 {{ render_field(form.destination, 1, placeholder='find location') }}
-                {{ render_arr_dep_dates_field(form.arr_date, form.ret_date, 3)}}
+                {{ render_field(form.arr_date, 3) }} 
+                {{ render_field(form.ret_date, 3) }} 
                 {{ render_radio_field(form.category, 4) }} 
                 {{ render_field(form.cost, 5) }}
                 {{ render_field(form.people, 2, placeholder='who was with you') }}
                 {{ render_field(form.accomodation, 6, placeholder='where you slept') }}
                 {{ render_field(form.notes, 7, placeholder='remarkable things') }} 
                  
+                <!-- token for CSRF protection (feature of WTF forms) -->
+                {{ form.csrf_token }}
             </form>
         </div>
     </div>

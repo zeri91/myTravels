@@ -8,10 +8,10 @@ from wtforms import (StringField, DateField, FloatField,
 from wtforms.validators import DataRequired, Optional, Length, AnyOf
 
 class AddTripForm(FlaskForm): 
-    destination = StringField('destination', validators=[DataRequired('Destination Required!'), Length(min=1, max=150, message='max 150 characters')])
-    arr_date = DateField('arr_date', format='%d-%m-%Y', validators=[Optional()])
-    ret_date = DateField('ret_date', format='%d-%m-%Y', validators=[Optional()])
-    category = RadioField('category', choices=[('opt1','leisure'),('opt2','work')], default='opt1', validators=[DataRequired()])
+    destination = StringField('destination', validators=[DataRequired('Destination Required!'), Length(min=2, max=150, message='max 150 characters')])
+    arr_date = DateField('arr_date', format='%Y-%m-%d', validators=[Optional()])
+    ret_date = DateField('ret_date', format='%Y-%m-%d', validators=[Optional()])
+    category = RadioField('category', choices=[('leisure','leisure'),('work','work')], default='leisure', validators=[DataRequired()])
     cost = FloatField('cost', validators=[Optional()])
     people = StringField('people', validators=[Optional()])
     accomodation = StringField('accomodation', validators=[Optional(), Length(max=50)])

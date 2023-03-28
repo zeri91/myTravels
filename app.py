@@ -33,6 +33,7 @@ from db import init_db_command
 
 # useful functions
 import utils
+from datetime import datetime
 
 # Global Vars
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
@@ -47,7 +48,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 
 # sqlAlchemy configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
@@ -126,8 +127,8 @@ def map():
     marker_favourits = folium.FeatureGroup(name='favourits', show=True)
 
     # load the favourit locations of the user
-    for l in g.locations:
-        folium.Marker(location=[l['lat'], l['long']], tooltip=l['name'], icon=folium.Icon(color='blue', icon='star')).add_to(marker_favourits)
+    #for l in g.locations:
+    #    folium.Marker(location=[l['lat'], l['long']], tooltip=l['name'], icon=folium.Icon(color='blue', icon='star')).add_to(marker_favourits)
      
     # Aggiungere i markers ai FeatureGroup
     # utils.add_to_featuregrp(airports, marker_airports, 'airports')
@@ -203,9 +204,28 @@ def travels_list():
     addTripForm = AddTripForm()
 
     # if form has been submitted and validators return true
-    if addTripForm.validate_on_submit(): 
-        return 'Trip added to your list!'
-        #add here the insert into DB
+    if request.method == 'POST' and addTripForm.validate_on_submit(): 
+        new_trip = Trip(country=addTripForm.destination.data, arr_date=addTripForm.arr_date.data, dep_date=addTripForm.ret_date.data,
+                    category=addTripForm.category.data, cost=addTripForm.cost.data, people=addTripForm.people.data,
+                    accomodation=addTripForm.accomodation.data, notes=addTripForm.notes.data,
+                    user_id=current_user.id, city=None
+        ) 
+        try:
+            db.session.add(new_trip)
+            db.session.commit()
+        except Exception as e:
+            print("Errore durante l'inserimento del nuovo viaggio nel database:", e)
+            flash('Errore durante l\'inserimento del nuovo viaggio nel database', 'error')
+        # Aggiorna la lista globale dei viaggi
+        g.trips = current_user.trips
+
+        # Mostra un messaggio di conferma e reindirizza l'utente alla pagina principale
+        flash('Il tuo viaggio é stato aggiunto alla lista', 'success')
+
+    elif request.method == 'POST' and  not addTripForm.validate_on_submit():
+        print("Il form non è stato sottomesso o i dati non sono validi")
+        print("Errori nel form:", addTripForm.errors)
+        flash('Il form non é stato sottomesso correttamente', 'error')
 
     return render_template('travelslist.html', form=addTripForm, travels=g.trips)
 

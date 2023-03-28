@@ -1,19 +1,23 @@
 .map-page {
   font-size: medium;
   font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: auto;
+  border: 2px solid black;
 }
 
 .map-container {
     width: calc(100% - 20px);
     margin: 10px;
     height:100vh; 
+	border: 2px solid black;
     /*width: 100vw;*/
   }
 
   .search-bar {
-    background-color: #4282CA;
-    padding: 5px;
-    margin: 10px;
+	text-align: center;
+	margin: auto;
+	
   }
   
   .search-bar form {
@@ -46,12 +50,25 @@
     color: white; 
   }
 
-  .alert-msg {
-    padding: 20px;
-    margin-top: 5px;
+
+  /* Flash messages style per category */
+  .flash-message {
+	width: 60%;
+	text-align: center;
+	margin: auto;
+  }
+  .flash-message.error, 
+  .flash-message.invalid-location {
     color: #970020;
     background-color: #ffd5de;
+	border: 2px solid #970020;
 }
+.flash-message.success {
+	color: #155724;
+	background-color: #d4edda;
+	border: 2px solid #155724;
+  }
+
 
 /* Main theme style */
 body {

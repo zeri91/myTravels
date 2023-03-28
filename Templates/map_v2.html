@@ -7,7 +7,7 @@
 {% block content %}
   <div class="container mt-5 map-page">
     <!-- Barra di ricerca e pulsanti -->
-    <form method="POST" class="row gx-3 gy-2 align-items-center">
+    <form method="POST" class="row gx-3 gy-2 search-bar" style="border: 2px solid black">
       <div class="col-sm-3">
         <label class="visually-hidden" for="address">Search</label>
         <input type="text" class="form-control" id="address" name="address" placeholder="find your location" value="{{ request.form['address'] }}">

@@ -26,8 +26,8 @@
 </head>
 
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <!-- Navbar  (rimosso fixed-top da nav)-->
+  <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
       <a class="navbar-brand" href="#"><span>My</span>Travels</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,11 +81,13 @@
   </nav>
 
   <!-- Error messages -->
-  <div>
-    {% for message in get_flashed_messages(with_categories=false) %}
-          <div class="alert-msg">{{ message }}</div>
-    {% endfor %}
-  </div>
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-warning alert-dismissible fade show flash-message {{category}}" role="alert">
+      <strong>{{ category }}</strong> {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+  
 
   <!-- Main content -->
   {% block content %}

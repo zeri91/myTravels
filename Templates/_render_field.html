@@ -4,8 +4,11 @@
     <div class="input-group tab" x-show="activeTab === {{tab_number}}" x-transition>
         <span class="input-group-text">{{ field.label.text }}</span>
         {{ field(class_='form-control', **kwargs)|safe }}
-        {% for message in get_flashed_messages(with_categories=false) %}
-            <div class="alert-msg">{{ message }}</div>
+        {% for message in get_flashed_messages(category_filter=['invalid-location']) %}
+            <div class="alert alert-warning alert-dismissible fade show flash-message {{category}}" role="alert">
+                <strong>{{ category }}</strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         {% endfor %}
     </div>
 {% endmacro %}
@@ -26,14 +29,18 @@
 
 
 {% macro render_arr_dep_dates_field(field1, field2, tab_number) %}
-    <div class="input-group tab" x-show="activeTab === {{tab_number}}" x-transition>
-        <label class="col-lg-2">{{ field1.label.text }}</label>
-        <div class="col-lg-4">
-            {{ field1 }}
+    <div class="input-group" x-show="activeTab === {{tab_number}}" style="font-family: Raleway; border: 2px solid" x-transition>
+        <div class="row">
+            <label class="col-lg-4">Arrival</label>
+            <div class="col-lg-8">
+                {{ field1 }}
+            </div>
         </div>
-        <label class="col-lg-2">{{ field2.label.text }}</label>
-        <div class="col-lg-4">
-            {{ field2 }}
+        <div class="row mt-2">
+            <label class="col-lg-4">Departure</label>
+            <div class="col-lg-8">
+                {{ field2 }}
+            </div>
         </div>
     </div>
 {% endmacro %}
