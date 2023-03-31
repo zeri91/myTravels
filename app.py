@@ -5,7 +5,10 @@ import sqlite3
 from re import sub
 
 # Third-party libraries
-from flask import Flask, render_template, redirect, request, url_for, flash, g
+from flask import ( Flask, render_template, redirect, 
+                   request, url_for, flash, g,
+                   make_response,
+)
 from flask_login import (
     LoginManager,
     current_user,
@@ -93,6 +96,8 @@ def load_locations():
 # @app.context_processor
 # def usr_context():
 
+@app.route('/home')
+@app.route('/index')
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -196,19 +201,25 @@ def map():
 def profile():
     return render_template('profile.html', name=current_user.name)
 
-@app.route('/travelslist', methods=['GET', 'POST'])
+@app.route('/travelslist', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def travels_list():
-    if not hasattr(g, 'trips'):
-        g.trips = current_user.trips
+    #if not hasattr(g, 'trips'):
+        #g.trips = current_user.trips
     addTripForm = AddTripForm()
 
     # if form has been submitted and validators return true
     if request.method == 'POST' and addTripForm.validate_on_submit(): 
-        new_trip = Trip(country=addTripForm.destination.data, arr_date=addTripForm.arr_date.data, dep_date=addTripForm.ret_date.data,
-                    category=addTripForm.category.data, cost=addTripForm.cost.data, people=addTripForm.people.data,
-                    accomodation=addTripForm.accomodation.data, notes=addTripForm.notes.data,
-                    user_id=current_user.id, city=None
+        new_trip = Trip(country=addTripForm.destination.data, 
+                        arr_date=addTripForm.arr_date.data, 
+                        dep_date=addTripForm.ret_date.data,
+                        category=addTripForm.category.data, 
+                        cost=addTripForm.cost.data, 
+                        people=addTripForm.people.data,
+                        accomodation=addTripForm.accomodation.data, 
+                        notes=addTripForm.notes.data,
+                        user_id=current_user.id, 
+                        city=None
         ) 
         try:
             db.session.add(new_trip)
@@ -217,9 +228,9 @@ def travels_list():
             print("Errore durante l'inserimento del nuovo viaggio nel database:", e)
             flash('Errore durante l\'inserimento del nuovo viaggio nel database', 'error')
         # Aggiorna la lista globale dei viaggi
-        g.trips = current_user.trips
+        #g.trips = current_user.trips
 
-        # Mostra un messaggio di conferma e reindirizza l'utente alla pagina principale
+        # Mostra un messaggio di conferma
         flash('Il tuo viaggio é stato aggiunto alla lista', 'success')
 
     elif request.method == 'POST' and  not addTripForm.validate_on_submit():
@@ -227,7 +238,23 @@ def travels_list():
         print("Errori nel form:", addTripForm.errors)
         flash('Il form non é stato sottomesso correttamente', 'error')
 
-    return render_template('travelslist.html', form=addTripForm, travels=g.trips)
+    # gestisci la richiesta di cancellazione di un viaggio
+    elif request.method == 'DELETE':
+        try:
+            # recupero il trip dal DB
+            trip_id = request.json.get('trip_id')
+            trip = Trip.query.get(trip_id)
+            if trip is None:
+                raise ValueError(f"Trip with ID {trip_id} not found.")
+            db.session.delete(trip)
+            db.session.commit()
+        except Exception as e:
+            #error_message = str(e)
+            flash('An error occurred while deleting the travel', 'error')
+
+        flash('Viaggio eliminato correttamente', 'success')
+
+    return render_template('travelslist.html', form=addTripForm, travels=current_user.trips)
 
 @app.route("/login")
 def login():
@@ -314,6 +341,29 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+@app.errorhandler(404)
+def not_found(e):
+    """Page not found."""
+    return make_response(
+        render_template("404.html"),
+        404
+     )
+
+@app.errorhandler(400)
+def bad_request():
+    """Bad request."""
+    return make_response(
+        render_template("400.html"),
+        400
+    )
+
+@app.errorhandler(500)
+def server_error():
+    """Internal server error."""
+    return make_response(
+        render_template("500.html"),
+        500
+    )
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()

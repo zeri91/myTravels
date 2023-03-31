@@ -331,6 +331,29 @@ button:focus{
 	text-align: right;
 	justify-content: right;
 }
+.modify-icon, .delete-icon, .confirm-icon {
+	font-size: 18px;
+	cursor: pointer;
+	margin-left: 10px;
+} 
+.modify-icon:hover, .delete-icon:hover, .confirm-icon:hover {
+	color: #555;
+}
+.modify-icon:before {
+	content: "\270E";
+}
+.delete-icon:before {
+	content: "\2716";
+}
+.modify-icon {
+	color: #007bff;
+}
+.delete-icon {
+	color: #dc3545;
+}
+.confirm-icon {
+	color: green;
+}
 /*
 .b1{
 	 border: 1px solid #000; 

@@ -4,6 +4,7 @@
 {% from "_render_field.html" import render_field, render_radio_field, render_arr_dep_dates_field %}
 
 {% block head %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://kit.fontawesome.com/f0fc554e33.js" crossorigin="anonymous"></script>
 {% endblock %}
 {% block title %} MyTravels {% endblock %}
@@ -52,9 +53,12 @@
 
     <!-- Travels list -->
     {% for travel in travels %}
-    <div class="row b1 d-flex justify-content-left align-items-left list-group">
+    <div class="row b1 d-flex justify-content-left align-items-left list-group" x-data="{ showConfirm: false }">
         <a href="#travel{{travel['trip_id']}}" class="list-group-item list-group-item-action" data-bs-toggle="collapse">
             <span class="float-start">{{ travel['country']}}{{", " ~ travel['city'] if travel['city']}}</span>
+            <span class="modify-icon"></span>
+            <span class="delete-icon" x-show="!showConfirm" @click="showConfirm = true"></span>
+            <span class="confirm-icon" x-show="showConfirm" @click="deleteElement({{travel['trip_id']}})">&#10004;</span>
             <span class="float-end">{{ travel['arr_date'].year }}</span>
         </a>
         <div class="collapse list-group-item" id="travel{{travel['trip_id']}}">
@@ -78,4 +82,21 @@ $(function () {
       $(this).addClass("was-validated");
     });
   });
+
+  function deleteElement(trip_id) {
+    // console.log(trip_id);
+    axios.delete('/travelslist', { data: { trip_id: trip_id }})
+      .then(response => {
+        // Rimuovi l'elemento dalla lista di viaggi
+        // e nascondi l'icona di conferma
+      })
+      .catch(error => {
+        // Gestisci l'errore
+        console.log(error);
+        element.parentElement.innerHTML = `Error: ${error.message}`;
+        console.error('There was an error!', error);
+      });
+  }
+
+
 {% endblock %}
